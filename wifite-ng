@@ -93,7 +93,7 @@ REVISION = 112
 
 # WPA variables
 WPA_DISABLE          = False  # Flag to skip WPA handshake capture
-WPA_STRIP_HANDSHAKE  = True  # Use pyrit or tshark (if applicable) to strip handshake
+WPA_STRIP_HANDSHAKE  = False  # Use pyrit or tshark (if applicable) to strip handshake
 WPA_DEAUTH_TIMEOUT   = 10    # Time to wait between deauthentication bursts (in seconds)
 WPA_ATTACK_TIMEOUT   = 500   # Total time to allow for a handshake attack (in seconds)
 WPA_HANDSHAKE_DIR    = 'hs'  # Directory in which handshakes .cap files are stored
