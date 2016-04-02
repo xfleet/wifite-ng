@@ -1435,6 +1435,7 @@ def wps_check_targets(targets, cap_file, verbose=True):
         cmd = [program_name,
                '-f', cap_file]
     else:
+
         cmd = [program_name,
                '-f', cap_file,
                '-C']  # ignore Frame Check Sum errors
@@ -2982,7 +2983,7 @@ def wps_attack(iface, target):
              "CC:B2:55", "D8:FE:E3", "E4:6F:13", "E8:CC:18", "EC:22:80", "F0:7D:68", "F8:E9:03", "FC:75:16"]
 
     oui = target.bssid[:8]
-    trydefaultpins = ""
+    pingen = False
 
     if oui in belkin or oui in dlink:
         print GR + '\n[+] Detected Belink/Dlink AP\n'
@@ -3344,12 +3345,6 @@ def wps_attack(iface, target):
 
         return cracked
 
-
-# c = CapFile('hs/KillfuckSoulshitter_C0-C1-C0-07-54-DC_2.cap', 'Killfuck Soulshitter', 'c0:c1:c0:07:54:dc')
-# WPA_CRACKER = 'aircrack'
-# cracked = wpa_crack(c)
-# print cracked
-# exit_gracefully(1)
 
 if __name__ == '__main__':
     try:
