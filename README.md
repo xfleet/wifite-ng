@@ -1,3 +1,11 @@
+#Modified Wifite
+
+Modified version of https://github.com/aanarchyy/wifite-mod-pixiewps to include some fixes:
+
+* Fixes for tshark from https://github.com/darkr4y/wifite-mod
+* Macchanger fix
+* Oui lookup for pingen attack
+
 #Added flags
     -pto <sec>        # configurable timeout for pixiewps attack, default 660
     -ponly            # uses only pixiewps and reaver up until M3
