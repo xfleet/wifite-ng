@@ -97,7 +97,7 @@ if WPA_HANDSHAKE_DIR != '' and WPA_HANDSHAKE_DIR[-1] == os.sep:
 
 WPA_FINDINGS = []  # List of strings containing info on successful WPA attacks
 WPA_DONT_CRACK = False  # Flag to skip cracking of handshakes
-WPA_DICTIONARY = '/pentest/web/wfuzz/wordlist/fuzzdb/wordlists-user-passwd/passwds/phpbb.txt'
+WPA_DICTIONARY = '/usr/share/sqlmap/txt/smalldict.txt'
 if not os.path.exists(WPA_DICTIONARY): WPA_DICTIONARY = ''
 
 # Various programs to use when checking for a four-way handshake.
