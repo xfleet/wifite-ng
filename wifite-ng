@@ -1480,8 +1480,10 @@ def rtl8187_fix(iface):
     using_rtl8187 = False
     for line in proc_airmon.communicate()[0].split():
         line = line.upper()
-        if line.strip() == '' or line.startswith('INTERFACE'): continue
-        if line.find(iface.upper()) and line.find('RTL8187') != -1: using_rtl8187 = True
+        if line.strip() == '' or line.startswith('INTERFACE') or line.startswith('PHY'):
+            continue
+        if line.find(iface.upper()) and line.find('RTL8187') != -1:
+            using_rtl8187 = True
 
     if not using_rtl8187:
         # Display error message and exit
@@ -2529,7 +2531,7 @@ def attack_wep(iface, target, clients):
             GR + sec_to_hms(WEP_TIMEOUT) + W, G, total_ivs, W, G + '0' + W),
             stdout.flush()
 
-            time.sleep(1)
+            #time.sleep(1)
             if attack_num == 1:
                 # Send a deauth packet to broadcast and all clients *just because!*
                 wep_send_deauths(iface, target, clients)
