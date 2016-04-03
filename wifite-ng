@@ -3,56 +3,14 @@
 # -*- coding: utf-8 -*-
 
 """
-	wifite
+    wifite
 
-	author: derv82 at gmail
+    author: derv82 at gmail
 
-	Licensed under the GNU General Public License Version 2 (GNU GPL v2),
-	    available at: http://www.gnu.org/licenses/gpl-2.0.txt
+    Licensed under the GNU General Public License Version 2 (GNU GPL v2),
+        available at: http://www.gnu.org/licenses/gpl-2.0.txt
 
-	(C) 2011 Derv Merkler
-
-	-----------------
-
-	TODO:
-
-	ignore root check when -cracked (afterward) (need root for -check?)
-	"cracked*" in list of AP's
-
-	Restore same command-line switch names from v1
-
-	If device already in monitor mode, check for and, if applicable, use macchanger
-
-	 WPS
-	 * Mention reaver automatically resumes sessions
-	 * Warning about length of time required for WPS attack (*hours*)
-	 * Show time since last successful attempt
-	 * Percentage of tries/attempts ?
-	 * Update code to work with reaver 1.4 ("x" sec/att)
-
-	 WEP:
-	 * ability to pause/skip/continue	(done, not tested)
-	 * Option to capture only IVS packets (uses --output-format ivs,csv)
-	   - not compatible on older aircrack-ng's.
-		   - Just run "airodump-ng --output-format ivs,csv", "No interface specified" = works
-		 - would cut down on size of saved .caps
-
-	 reaver:
-	 	 MONITOR ACTIVITY!
-	 	 - Enter ESSID when executing (?)
-	   - Ensure WPS key attempts have begun.
-	   - If no attempts can be made, stop attack
-
-	   - During attack, if no attempts are made within X minutes, stop attack & Print
-
-	   - Reaver's output when unable to associate:
-	     [!] WARNING: Failed to associate with AA:BB:CC:DD:EE:FF (ESSID: ABCDEF)
-	   - If failed to associate for x minutes, stop attack (same as no attempts?)
-
-	MIGHTDO:
-	  * WPA - crack (pyrit/cowpatty) (not really important)
-	  * Test injection at startup? (skippable via command-line switch)
-
+    (C) 2011 Derv Merkler
 """
 
 #############
@@ -88,17 +46,19 @@ REVISION = 112
 # WPA variables
 WPA_DISABLE = False  # Flag to skip WPA handshake capture
 WPA_STRIP_HANDSHAKE = True  # Use pyrit or tshark (if applicable) to strip handshake
-WPA_DEAUTH_TIMEOUT = 10  # Time to wait between deauthentication bursts (in seconds)
-WPA_ATTACK_TIMEOUT = 500  # Total time to allow for a handshake attack (in seconds)
-WPA_HANDSHAKE_DIR = 'hs'  # Directory in which handshakes .cap files are stored
+WPA_DEAUTH_TIMEOUT = 6  # Time to wait between deauthentication bursts (in seconds)
+WPA_ATTACK_TIMEOUT = 240  # Total time to allow for a handshake attack (in seconds)
+WPA_HANDSHAKE_DIR = '/captures/wifite/hs'  # Directory in which handshakes .cap files are stored
+
 # Strip file path separator if needed
 if WPA_HANDSHAKE_DIR != '' and WPA_HANDSHAKE_DIR[-1] == os.sep:
     WPA_HANDSHAKE_DIR = WPA_HANDSHAKE_DIR[:-1]
 
 WPA_FINDINGS = []  # List of strings containing info on successful WPA attacks
 WPA_DONT_CRACK = False  # Flag to skip cracking of handshakes
-WPA_DICTIONARY = '/usr/share/sqlmap/txt/smalldict.txt'
-if not os.path.exists(WPA_DICTIONARY): WPA_DICTIONARY = ''
+WPA_DICTIONARY = '/opt/dic/89.txt'
+if not os.path.exists(WPA_DICTIONARY):
+    WPA_DICTIONARY = ''
 
 # Various programs to use when checking for a four-way handshake.
 # True means the program must find a valid handshake in order for wifite to recognize a handshake.
@@ -192,8 +152,8 @@ DN = open(os.devnull, 'w')
 
 class CapFile:
     """
-		Holds data about an access point's .cap file, including AP's ESSID & BSSID.
-	"""
+        Holds data about an access point's .cap file, including AP's ESSID & BSSID.
+    """
 
     def __init__(self, filename, ssid, bssid):
         self.filename = filename
@@ -203,8 +163,8 @@ class CapFile:
 
 class Target:
     """
-		Holds data for a Target (aka Access Point aka Router)
-	"""
+        Holds data for a Target (aka Access Point aka Router)
+    """
 
     def __init__(self, bssid, power, data, channel, encryption, ssid):
         self.bssid = bssid
@@ -219,8 +179,8 @@ class Target:
 
 class Client:
     """
-		Holds data for a Client (device connected to Access Point/Router)
-	"""
+        Holds data for a Client (device connected to Access Point/Router)
+    """
 
     def __init__(self, bssid, station, power):
         self.bssid = bssid
@@ -235,8 +195,8 @@ class Client:
 
 def main():
     """
-		Where the magic happens.
-	"""
+        Where the magic happens.
+    """
     global TARGETS_REMAINING, THIS_MAC, CRACKED_TARGETS, TOTAL_RUNS
 
     CRACKED_TARGETS = load_cracked()  # Load previously-cracked APs from file
@@ -397,9 +357,9 @@ def main():
 
 def rename(old, new):
     """
-		Renames file 'old' to 'new', works with separate partitions.
-		Thanks to hannan.sadar
-	"""
+        Renames file 'old' to 'new', works with separate partitions.
+        Thanks to hannan.sadar
+    """
     try:
         os.rename(old, new)
     except os.error, detail:
@@ -417,8 +377,8 @@ def rename(old, new):
 
 def initial_check():
     """
-		Ensures required programs are installed.
-	"""
+        Ensures required programs are installed.
+    """
     global WPS_DISABLE
     airs = ['aircrack-ng', 'airodump-ng', 'aireplay-ng', 'airmon-ng', 'packetforge-ng']
     for air in airs:
@@ -456,8 +416,8 @@ def initial_check():
 
 def handle_args():
     """
-		Handles command-line arguments, sets global variables.
-	"""
+        Handles command-line arguments, sets global variables.
+    """
     global WIRELESS_IFACE, TARGET_CHANNEL, DO_NOT_CHANGE_MAC, TARGET_ESSID, TARGET_BSSID
     global WPA_DISABLE, WPA_STRIP_HANDSHAKE, WPA_DEAUTH_TIMEOUT, WPA_ATTACK_TIMEOUT
     global WPA_DONT_CRACK, WPA_DICTIONARY, WPA_HANDSHAKE_TSHARK, WPA_HANDSHAKE_PYRIT
@@ -754,8 +714,8 @@ def handle_args():
 
 def banner():
     """
-		Displays ASCII art of the highest caliber.
-	"""
+        Displays ASCII art of the highest caliber.
+    """
     global REVISION
     print ''
     print G + "  .;'                     `;,    "
@@ -775,9 +735,9 @@ def banner():
 
 def upgrade():
     """
-		Checks for new version, prompts to upgrade, then
-		replaces this script with the latest from the repo
-	"""
+        Checks for new version, prompts to upgrade, then
+        replaces this script with the latest from the repo
+    """
     global REVISION
     # Download script, replace with this one
     print GR + ' [+] ' + G + 'downloading' + W + ' update...'
@@ -810,12 +770,12 @@ def upgrade():
         # create/save a shell script that replaces this script with the new one
         f = open('update_wifite.sh', 'w')
         f.write('''#!/bin/sh\n
-		           rm -rf ''' + this_file + '''\n
-			   cp ''' + temp + '''wifite-mod-pixiewps-master/wifite-ng ''' + this_file + '''\n
-		           rm -rf update_wifite.sh\n
+                   rm -rf ''' + this_file + '''\n
+               cp ''' + temp + '''wifite-mod-pixiewps-master/wifite-ng ''' + this_file + '''\n
+                   rm -rf update_wifite.sh\n
                            rm -rf ''' + temp + '''wifite-mod-pixiewps-master/
-		           chmod +x ''' + this_file + '''\n
-		          ''')
+                   chmod +x ''' + this_file + '''\n
+                  ''')
         f.close()
 
         # Change permissions on the script
@@ -839,8 +799,8 @@ def upgrade():
 
 def help_wifite():
     """
-		Prints help screen
-	"""
+        Prints help screen
+    """
 
     head = W
     sw = G
@@ -917,11 +877,11 @@ def help_wifite():
 
 def enable_monitor_mode(iface):
     """
-		Uses airmon-ng to put a device into Monitor Mode.
-		Then uses the get_iface() method to retrieve the new interface's name.
-		Sets global variable IFACE_TO_TAKE_DOWN as well.
-		Returns the name of the interface in monitor mode.
-	"""
+        Uses airmon-ng to put a device into Monitor Mode.
+        Then uses the get_iface() method to retrieve the new interface's name.
+        Sets global variable IFACE_TO_TAKE_DOWN as well.
+        Returns the name of the interface in monitor mode.
+    """
     global IFACE_TO_TAKE_DOWN
     print GR + ' [+]' + W + ' enabling monitor mode on %s...' % (G + iface + W),
     stdout.flush()
@@ -934,9 +894,9 @@ def enable_monitor_mode(iface):
 
 def disable_monitor_mode():
     """
-		The program may have enabled monitor mode on a wireless interface.
-		We want to disable this before we exit, so we will do that.
-	"""
+        The program may have enabled monitor mode on a wireless interface.
+        We want to disable this before we exit, so we will do that.
+    """
     if IFACE_TO_TAKE_DOWN == '': return
     print GR + ' [+]' + W + ' disabling monitor mode on %s...' % (G + IFACE_TO_TAKE_DOWN + W),
     stdout.flush()
@@ -949,13 +909,13 @@ PRINTED_SCANNING = False
 
 def get_iface():
     """
-		Get the wireless interface in monitor mode.
-		Defaults to only device in monitor mode if found.
-		Otherwise, enumerates list of possible wifi devices
-		and asks user to select one to put into monitor mode (if multiple).
-		Uses airmon-ng to put device in monitor mode if needed.
-		Returns the name (string) of the interface chosen in monitor mode.
-	"""
+        Get the wireless interface in monitor mode.
+        Defaults to only device in monitor mode if found.
+        Otherwise, enumerates list of possible wifi devices
+        and asks user to select one to put into monitor mode (if multiple).
+        Uses airmon-ng to put device in monitor mode if needed.
+        Returns the name (string) of the interface chosen in monitor mode.
+    """
     global PRINTED_SCANNING
     if not PRINTED_SCANNING:
         print GR + ' [+]' + W + ' scanning for wireless devices...'
@@ -1040,12 +1000,12 @@ def get_iface():
 
 def scan(channel=0, iface='', tried_rtl8187_fix=False):
     """
-		Scans for access points. Asks user to select target(s).
-			"channel" - the channel to scan on, 0 scans all channels.
-			"iface"   - the interface to scan on. must be a real interface.
-			"tried_rtl8187_fix" - We have already attempted to fix "Unknown error 132"
-		Returns list of selected targets and list of clients.
-	"""
+        Scans for access points. Asks user to select target(s).
+            "channel" - the channel to scan on, 0 scans all channels.
+            "iface"   - the interface to scan on. must be a real interface.
+            "tried_rtl8187_fix" - We have already attempted to fix "Unknown error 132"
+        Returns list of selected targets and list of clients.
+    """
     remove_airodump_files(temp + 'wifite')
 
     command = ['airodump-ng',
@@ -1351,9 +1311,9 @@ def scan(channel=0, iface='', tried_rtl8187_fix=False):
 
 def parse_csv(filename):
     """
-		Parses given lines from airodump-ng CSV file.
-		Returns tuple: List of targets and list of clients.
-	"""
+        Parses given lines from airodump-ng CSV file.
+        Returns tuple: List of targets and list of clients.
+    """
     if not os.path.exists(filename): return [], []
     try:
         f = open(filename, 'r')
@@ -1406,9 +1366,9 @@ def parse_csv(filename):
 
 def wps_check_targets(targets, cap_file, verbose=True):
     """
-		Uses reaver's "walsh" (or wash) program to check access points in cap_file
-		for WPS functionality. Sets "wps" field of targets that match to True.
-	"""
+        Uses reaver's "walsh" (or wash) program to check access points in cap_file
+        for WPS functionality. Sets "wps" field of targets that match to True.
+    """
     global WPS_DISABLE
 
     if not program_exists('walsh') and not program_exists('wash'):
@@ -1470,10 +1430,10 @@ def wps_check_targets(targets, cap_file, verbose=True):
 
 def rtl8187_fix(iface):
     """
-		Attempts to solve "Unknown error 132" common with RTL8187 devices.
-		Puts down interface, unloads/reloads driver module, then puts iface back up.
-		Returns True if fix was attempted, False otherwise.
-	"""
+        Attempts to solve "Unknown error 132" common with RTL8187 devices.
+        Puts down interface, unloads/reloads driver module, then puts iface back up.
+        Returns True if fix was attempted, False otherwise.
+    """
     # Check if current interface is using the RTL8187 chipset
     proc_airmon = Popen(['airmon-ng'], stdout=PIPE, stderr=DN)
     proc_airmon.wait()
@@ -1521,9 +1481,9 @@ def rtl8187_fix(iface):
 
 def print_and_exec(cmd):
     """
-		Prints and executes command "cmd". Also waits half a second
-		Used by rtl8187_fix (for prettiness)
-	"""
+        Prints and executes command "cmd". Also waits half a second
+        Used by rtl8187_fix (for prettiness)
+    """
     print '\r                                                        \r',
     stdout.flush()
     print O + ' [!] ' + W + 'executing: ' + O + ' '.join(cmd) + W,
@@ -1538,9 +1498,9 @@ def print_and_exec(cmd):
 
 def remove_airodump_files(prefix):
     """
-		Removes airodump output files for whatever file prefix ('wpa', 'wep', etc)
-		Used by wpa_get_handshake() and attack_wep()
-	"""
+        Removes airodump output files for whatever file prefix ('wpa', 'wep', etc)
+        Used by wpa_get_handshake() and attack_wep()
+    """
     remove_file(prefix + '-01.cap')
     remove_file(prefix + '-01.csv')
     remove_file(prefix + '-01.kismet.csv')
@@ -1553,16 +1513,16 @@ def remove_airodump_files(prefix):
         if filename.endswith('.xor'): remove_file(filename)
     # Remove .cap's from previous attack sessions
     """i = 2
-	while os.path.exists(temp + 'wep-' + str(i) + '.cap'):
-		os.remove(temp + 'wep-' + str(i) + '.cap')
-		i += 1
-	"""
+    while os.path.exists(temp + 'wep-' + str(i) + '.cap'):
+        os.remove(temp + 'wep-' + str(i) + '.cap')
+        i += 1
+    """
 
 
 def remove_file(filename):
     """
-		Attempts to remove a file. Does not throw error if file is not found.
-	"""
+        Attempts to remove a file. Does not throw error if file is not found.
+    """
     try:
         os.remove(filename)
     except OSError:
@@ -1571,8 +1531,8 @@ def remove_file(filename):
 
 def program_exists(program):
     """
-		Uses 'which' (linux command) to check if a program is installed.
-	"""
+        Uses 'which' (linux command) to check if a program is installed.
+    """
 
     proc = Popen(['which', program], stdout=PIPE, stderr=PIPE)
     txt = proc.communicate()
@@ -1586,8 +1546,8 @@ def program_exists(program):
 
 def sec_to_hms(sec):
     """
-		Converts integer sec to h:mm:ss format
-	"""
+        Converts integer sec to h:mm:ss format
+    """
     if sec <= -1: return '[endless]'
     h = sec / 3600
     sec %= 3600
@@ -1598,8 +1558,8 @@ def sec_to_hms(sec):
 
 def send_interrupt(process):
     """
-		Sends interrupt signal to process's PID.
-	"""
+        Sends interrupt signal to process's PID.
+    """
     try:
         os.kill(process.pid, SIGINT)
     # os.kill(process.pid, SIGTERM)
@@ -1615,8 +1575,8 @@ def send_interrupt(process):
 
 def get_mac_address(iface):
     """
-		Returns MAC address of "iface".
-	"""
+        Returns MAC address of "iface".
+    """
     proc = Popen(['ifconfig', iface], stdout=PIPE, stderr=DN)
     proc.wait()
     mac = ''
@@ -1630,10 +1590,10 @@ def get_mac_address(iface):
 
 def generate_random_mac(old_mac):
     """
-		Generates a random MAC address.
-		Keeps the same vender (first 6 chars) of the old MAC address (old_mac).
-		Returns string in format old_mac[0:9] + :XX:XX:XX where X is random hex
-	"""
+        Generates a random MAC address.
+        Keeps the same vender (first 6 chars) of the old MAC address (old_mac).
+        Returns string in format old_mac[0:9] + :XX:XX:XX where X is random hex
+    """
     if ORIGINAL_IFACE_MAC == old_mac: return
     random.seed()
     new_mac = old_mac[:0].lower().replace('-', ':')
@@ -1648,10 +1608,10 @@ def generate_random_mac(old_mac):
 
 def mac_anonymize(iface):
     """
-		Changes MAC address of 'iface' to a random MAC.
-		Only randomizes the last 6 digits of the MAC, so the vender says the same.
-		Stores old MAC address and the interface in ORIGINAL_IFACE_MAC
-	"""
+        Changes MAC address of 'iface' to a random MAC.
+        Only randomizes the last 6 digits of the MAC, so the vender says the same.
+        Stores old MAC address and the interface in ORIGINAL_IFACE_MAC
+    """
     global ORIGINAL_IFACE_MAC
     if DO_NOT_CHANGE_MAC: return
     if not program_exists('macchanger'): return
@@ -1678,8 +1638,8 @@ def mac_anonymize(iface):
 
 def mac_change_back():
     """
-		Changes MAC address back to what it was before attacks began.
-	"""
+        Changes MAC address back to what it was before attacks began.
+    """
     iface = ORIGINAL_IFACE_MAC[0]
     old_mac = ORIGINAL_IFACE_MAC[1]
     if iface == '' or old_mac == '': return
@@ -1696,9 +1656,9 @@ def mac_change_back():
 
 def analyze_capfile(capfile):
     """
-		Analyzes given capfile for handshakes using various programs.
-		Prints results to console.
-	"""
+        Analyzes given capfile for handshakes using various programs.
+        Prints results to console.
+    """
     global TARGET_BSSID, TARGET_ESSID
 
     if TARGET_ESSID == '' and TARGET_BSSID == '':
@@ -1758,9 +1718,9 @@ def analyze_capfile(capfile):
 
 def get_essid_from_cap(bssid, capfile):
     """
-		Attempts to get ESSID from cap file using BSSID as reference.
-		Returns '' if not found.
-	"""
+        Attempts to get ESSID from cap file using BSSID as reference.
+        Returns '' if not found.
+    """
     if not program_exists('tshark'): return ''
 
     cmd = ['tshark',
@@ -1780,10 +1740,10 @@ def get_essid_from_cap(bssid, capfile):
 
 def get_bssid_from_cap(essid, capfile):
     """
-		Returns first BSSID of access point found in cap file.
-		This is not accurate at all, but it's a good guess.
-		Returns '' if not found.
-	"""
+        Returns first BSSID of access point found in cap file.
+        This is not accurate at all, but it's a good guess.
+        Returns '' if not found.
+    """
     global TARGET_ESSID
 
     if not program_exists('tshark'): return ''
@@ -1823,10 +1783,10 @@ def get_bssid_from_cap(essid, capfile):
 
 def exit_gracefully(code=0):
     """
-		We may exit the program at any time.
-		We want to remove the temp folder and any files contained within it.
-		Removes the temp files/folder and exists with error code "code".
-	"""
+        We may exit the program at any time.
+        We want to remove the temp folder and any files contained within it.
+        Removes the temp files/folder and exists with error code "code".
+    """
     # Remove temp files and folder
     if os.path.exists(temp):
         for filetype in os.listdir(temp):
@@ -1844,11 +1804,11 @@ def exit_gracefully(code=0):
 
 def attack_interrupted_prompt():
     """
-		Promps user to decide if they want to exit,
-		skip to cracking WPA handshakes,
-		or continue attacking the remaining targets (if applicable).
-		returns True if user chose to exit complete, False otherwise
-	"""
+        Promps user to decide if they want to exit,
+        skip to cracking WPA handshakes,
+        or continue attacking the remaining targets (if applicable).
+        returns True if user chose to exit complete, False otherwise
+    """
     global TARGETS_REMAINING
     should_we_exit = False
     # If there are more targets to attack, ask what to do next
@@ -1884,15 +1844,15 @@ def attack_interrupted_prompt():
 
 def wpa_get_handshake(iface, target, clients):
     """
-		Opens an airodump capture on the target, dumping to a file.
-		During the capture, sends deauthentication packets to the target both as
-		general deauthentication packets and specific packets aimed at connected clients.
-		Waits until a handshake is captured.
-			"iface"   - interface to capture on
-			"target"  - Target object containing info on access point
-			"clients" - List of Client objects associated with the target
-		Returns True if handshake was found, False otherwise
-	"""
+        Opens an airodump capture on the target, dumping to a file.
+        During the capture, sends deauthentication packets to the target both as
+        general deauthentication packets and specific packets aimed at connected clients.
+        Waits until a handshake is captured.
+            "iface"   - interface to capture on
+            "target"  - Target object containing info on access point
+            "clients" - List of Client objects associated with the target
+        Returns True if handshake was found, False otherwise
+    """
     global TARGETS_REMAINING, WPA_ATTACK_TIMEOUT
     if WPA_ATTACK_TIMEOUT <= 0: WPA_ATTACK_TIMEOUT = -1
 
@@ -2064,9 +2024,9 @@ def wpa_get_handshake(iface, target, clients):
 
 def has_handshake_tshark(target, capfile):
     """
-		Uses TShark to check for a handshake.
-		Returns "True" if handshake is found, false otherwise.
-	"""
+        Uses TShark to check for a handshake.
+        Returns "True" if handshake is found, false otherwise.
+    """
     if program_exists('tshark'):
         # Call Tshark to return list of EAPOL packets in cap file.
         cmd = ['tshark',
@@ -2148,9 +2108,9 @@ def has_handshake_tshark(target, capfile):
 
 def has_handshake_cowpatty(target, capfile, nonstrict=True):
     """
-		Uses cowpatty to check for a handshake.
-		Returns "True" if handshake is found, false otherwise.
-	"""
+        Uses cowpatty to check for a handshake.
+        Returns "True" if handshake is found, false otherwise.
+    """
     if not program_exists('cowpatty'): return False
 
     # Call cowpatty to check if capfile contains a valid handshake.
@@ -2174,9 +2134,9 @@ def has_handshake_cowpatty(target, capfile, nonstrict=True):
 
 def has_handshake_pyrit(target, capfile):
     """
-		Uses pyrit to check for a handshake.
-		Returns "True" if handshake is found, false otherwise.
-	"""
+        Uses pyrit to check for a handshake.
+        Returns "True" if handshake is found, false otherwise.
+    """
     if not program_exists('pyrit'): return False
 
     # Call pyrit to "Analyze" the cap file's handshakes.
@@ -2205,9 +2165,9 @@ def has_handshake_pyrit(target, capfile):
 
 def has_handshake_aircrack(target, capfile):
     """
-		Uses aircrack-ng to check for handshake.
-		Returns True if found, False otherwise.
-	"""
+        Uses aircrack-ng to check for handshake.
+        Returns True if found, False otherwise.
+    """
     if not program_exists('aircrack-ng'): return False
     crack = 'echo "" | aircrack-ng -a 2 -w - -b ' + target.bssid + ' ' + capfile
     proc_crack = Popen(crack, stdout=PIPE, stderr=DN, shell=True)
@@ -2219,9 +2179,9 @@ def has_handshake_aircrack(target, capfile):
 
 def has_handshake(target, capfile):
     """
-		Checks if .cap file contains a handshake.
-		Returns True if handshake is found, False otherwise.
-	"""
+        Checks if .cap file contains a handshake.
+        Returns True if handshake is found, False otherwise.
+    """
     valid_handshake = True
     tried = False
     if WPA_HANDSHAKE_TSHARK:
@@ -2254,9 +2214,9 @@ def has_handshake(target, capfile):
 
 def strip_handshake(capfile):
     """
-		Uses Tshark or Pyrit to strip all non-handshake packets from a .cap file
-		File in location 'capfile' is overwritten!
-	"""
+        Uses Tshark or Pyrit to strip all non-handshake packets from a .cap file
+        File in location 'capfile' is overwritten!
+    """
     output_file = capfile
     if program_exists('pyrit'):
         cmd = ['pyrit',
@@ -2280,8 +2240,8 @@ def strip_handshake(capfile):
 
 def save_cracked(bssid, ssid, key, encryption):
     """
-		Saves cracked access point key and info to a file.
-	"""
+        Saves cracked access point key and info to a file.
+    """
     sep = chr(9)
     fout = open('cracked.txt', 'a')
     fout.write(bssid + sep + ssid + sep + key + sep + encryption + '\n')
@@ -2291,8 +2251,8 @@ def save_cracked(bssid, ssid, key, encryption):
 
 def load_cracked():
     """
-		Loads info about cracked access points into list, returns list.
-	"""
+        Loads info about cracked access points into list, returns list.
+    """
     result = []
     if not os.path.exists('cracked.txt'): return result
     fin = open('cracked.txt', 'r')
@@ -2314,10 +2274,10 @@ def load_cracked():
 
 def wpa_crack(capfile):
     """
-		Cracks cap file using aircrack-ng
-		This is crude and slow. If people want to crack using pyrit or cowpatty or oclhashcat,
-		they can do so manually.
-	"""
+        Cracks cap file using aircrack-ng
+        This is crude and slow. If people want to crack using pyrit or cowpatty or oclhashcat,
+        they can do so manually.
+    """
     if WPA_DICTIONARY == '':
         print R + ' [!]' + O + ' no WPA dictionary found! use -dict <file> command-line argument' + W
         return False
@@ -2414,9 +2374,9 @@ def wpa_crack(capfile):
 
 def add_commas(n):
     """
-		Receives integer n, returns string representation of n with commas in thousands place.
-		I'm sure there's easier ways of doing this... but meh.
-	"""
+        Receives integer n, returns string representation of n with commas in thousands place.
+        I'm sure there's easier ways of doing this... but meh.
+    """
     strn = str(n)
     lenn = len(strn)
     i = 0
@@ -2434,9 +2394,9 @@ def add_commas(n):
 
 def attack_wep(iface, target, clients):
     """
-		Attacks WEP-encrypted network.
-		Returns True if key was successfully found, False otherwise.
-	"""
+        Attacks WEP-encrypted network.
+        Returns True if key was successfully found, False otherwise.
+    """
     global WEP_TIMEOUT, TARGETS_REMAINING
     if WEP_TIMEOUT <= 0: WEP_TIMEOUT = -1
 
@@ -2813,10 +2773,10 @@ def attack_wep(iface, target, clients):
 
 def wep_fake_auth(iface, target, time_to_display):
     """
-		Attempt to (falsely) authenticate with a WEP access point.
-		Gives 3 seconds to make each 5 authentication attempts.
-		Returns True if authentication was successful, False otherwise.
-	"""
+        Attempt to (falsely) authenticate with a WEP access point.
+        Gives 3 seconds to make each 5 authentication attempts.
+        Returns True if authentication was successful, False otherwise.
+    """
     max_wait = 3  # Time, in seconds, to allow each fake authentication
     max_attempts = 5  # Number of attempts to make
 
@@ -2863,8 +2823,8 @@ def wep_fake_auth(iface, target, time_to_display):
 
 def get_aireplay_command(iface, attack_num, target, clients, client_mac):
     """
-		Returns aireplay-ng command line arguments based on parameters.
-	"""
+        Returns aireplay-ng command line arguments based on parameters.
+    """
     cmd = ''
     if attack_num == 0:
         cmd = ['aireplay-ng',
@@ -2937,8 +2897,8 @@ def get_aireplay_command(iface, attack_num, target, clients, client_mac):
 
 def wep_send_deauths(iface, target, clients):
     """
-		Sends deauth packets to broadcast and every client.
-	"""
+        Sends deauth packets to broadcast and every client.
+    """
     # Send deauth to broadcast
     cmd = ['aireplay-ng',
            '--deauth', '1',
@@ -2962,11 +2922,11 @@ def wep_send_deauths(iface, target, clients):
 
 def wps_attack(iface, target):
     """
-		Mounts attack against target on iface.
-		Uses "reaver" to attempt to brute force the PIN.
-		Once PIN is found, PSK can be recovered.
-		PSK is displayed to user and added to WPS_FINDINGS
-	"""
+        Mounts attack against target on iface.
+        Uses "reaver" to attempt to brute force the PIN.
+        Once PIN is found, PSK can be recovered.
+        PSK is displayed to user and added to WPS_FINDINGS
+    """
 
     #####PIXIEWPS#####
 
