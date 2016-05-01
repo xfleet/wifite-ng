@@ -36,6 +36,7 @@ import urllib  # Check for new versions from the repo
 import signal
 from subprocess import Popen
 from subprocess import call
+import fcntl, socket, struct
 
 ################################
 # GLOBAL VARIABLES IN ALL CAPS #
@@ -111,7 +112,7 @@ ENDLESS = 1
 TOTAL_RUNS = 0
 
 # Pixie variables
-PIXIE_TIMEOUT = 300  # timeout for pixiewps attack
+PIXIE_TIMEOUT = 600  # timeout for pixiewps attack
 PIXIE_NOPSK = False  # do not run reaver using pin found by pixiewps if it is sucessful
 PIXIE_ONLY = False  # only use pixiewps, do not run reaver brute-force
 PIXIE_ADD_TO = 30  # add n seconds to timeout
@@ -1577,15 +1578,12 @@ def get_mac_address(iface):
     """
         Returns MAC address of "iface".
     """
-    proc = Popen(['ifconfig', iface], stdout=PIPE, stderr=DN)
-    proc.wait()
-    mac = ''
-    first_line = proc.communicate()[0].split('\n')[0]
-    for word in first_line.split(' '):
-        if word != '': mac = word
-    if mac.find('-') != -1: mac = mac.replace('-', ':')
-    if len(mac) > 17: mac = mac[0:17]
-    return mac
+    # Author: vishnubob
+    # http://code.activestate.com/recipes/439094-get-the-ip-address-associated-with-a-network-inter/
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    info = fcntl.ioctl(s.fileno(), 0x8927, struct.pack('256s', iface[:15]))
+
+    return ''.join(['%02x:' % ord(char) for char in info[18:24]])[:-1]
 
 
 def generate_random_mac(old_mac):
@@ -2989,14 +2987,12 @@ def wps_attack(iface, target):
     if newreav > 0:
         # Old Reaver
         pid = Popen(
-            ["reaver", "-i", iface, "-c", target.channel, "-b", target.bssid, "-vvv",
-             "--no-nacks", "-L", "-a", "-P"],
+            ["reaver", "-i", iface, "-c", target.channel, "-b", target.bssid, "-vvv", "--no-nacks", "-L", "-a", "-P"],
             stdout=p_out).pid
     else:
         # Default reaver for pixiewps
         pid = Popen(
-            ["reaver", "-i", iface, "-c", target.channel, "-b", target.bssid, "-vv",
-             "--no-nacks", "-L", "-a", "-P"],
+            ["reaver", "-i", iface, "-c", target.channel, "-b", target.bssid, "-vv", "--no-nacks", "-L", "-a", "-P"],
             stdout=p_out).pid
 
     # print 'Running reaver -i %s -c %s -b %s -vv -N -L -a -P' % (iface, target.channel, target.bssid),
