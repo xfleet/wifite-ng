@@ -2,6 +2,7 @@
 This is a modified wifite fork, with patches to make it work again.
 If your interested in joining up keeping this tool alive & working -- feel free to join up!
 
+* Now support Pixie attack + a timeout switch
 * Fixes for tshark from https://github.com/darkr4y/wifite-mod
 * Macchanger fix
 * Oui lookup for pingen attack
