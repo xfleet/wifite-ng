@@ -85,7 +85,7 @@ from subprocess import call
 # GLOBAL VARIABLES IN ALL CAPS #
 ################################
 
-REVISION = 112
+REVISION = 1
 
 # WPA variables
 WPA_DISABLE = False  # Flag to skip WPA handshake capture
@@ -769,9 +769,8 @@ def banner():
     print G + "  ':.       " + GR + "/_____\\" + G + "      ,:'     "
     print G + "           " + GR + "/       \\" + G + "             "
     print G + ""
-    print G + "modified by binkybear(binkybear@nethunter.com)"
-    print G + "modified by aanarchyy(aanarchyy@gmail.com)"
-    print G + "Credits to wiire,DataHead,soxrok2212,nxxxu,nuroo"
+    print G + "Credits to aanarchyy, wiire,DataHead,soxrok2212,nxxxu,nuroo & binkybear @ NetHunter"
+    print G + "-- for bringing back a good, old working wifite tool to life."
     print W
 
 
@@ -786,7 +785,7 @@ def upgrade():
 
     try:
         try:
-            sock = urllib.urlopen('https://github.com/binkybear/wifite-mod-pixiewps/archive/master.zip')
+            sock = urllib.urlopen('https://github.com/kimocoder/wifite-ng/archive/master.zip')
             page = sock.read()
         except IOError:
             page = ''
@@ -794,11 +793,11 @@ def upgrade():
             print R + ' [+] ' + O + 'unable to download latest version' + W
             exit_gracefully(1)
 
-        f = open(temp + 'wifite-mod-pixiewps-master.zip', 'w')
+        f = open(temp + 'wifite-ng-master.zip', 'w')
         f.write(page)
         f.close()
 
-        returncode = call(['unzip', '-d', temp, temp + 'wifite-mod-pixiewps-master.zip'])
+        returncode = call(['unzip', '-d', temp, temp + 'wifite-ng-master.zip'])
 
         if returncode != 0:
             print R + ' [!]' + O + ' unzip change returned unexpected code: ' + str(returncode) + W
@@ -813,9 +812,9 @@ def upgrade():
         f = open('update_wifite.sh', 'w')
         f.write('''#!/bin/sh\n
 		           rm -rf ''' + this_file + '''\n
-			   cp ''' + temp + '''wifite-mod-pixiewps-master/wifite-ng ''' + this_file + '''\n
+			   cp ''' + temp + '''wifite-ng-master/wifite-ng ''' + this_file + '''\n
 		           rm -rf update_wifite.sh\n
-                           rm -rf ''' + temp + '''wifite-mod-pixiewps-master/
+                           rm -rf ''' + temp + '''wifite-ng-master/
 		           chmod +x ''' + this_file + '''\n
 		          ''')
         f.close()
