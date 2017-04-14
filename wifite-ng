@@ -3180,7 +3180,6 @@ def wps_attack(iface, target):
                    '-i', iface,
                    '-b', target.bssid,
                    '-o', temp + 'out.out',  # Dump output to file to be monitored
-                   '-a',  # auto-detect best options, auto-resumes sessions, doesn't require input!
                    '-c', target.channel,
                    '--generate-pin',  # Dlink and Belkin try default pins
                    '-vv']  # verbose output
@@ -3189,7 +3188,6 @@ def wps_attack(iface, target):
                    '-i', iface,
                    '-b', target.bssid,
                    '-o', temp + 'out.out',  # Dump output to file to be monitored
-                   '-a',  # auto-detect best options, auto-resumes sessions, doesn't require input!
                    '-c', target.channel,
                    '-vv']  # verbose output
     else:
