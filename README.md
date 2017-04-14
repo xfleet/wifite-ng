@@ -1,6 +1,6 @@
 
-This is a modified wifite fork, with patches to make it work again.
-If your interested in joining up keeping this tool alive & working -- feel free to join up!
+This is a modified wifite2 fork, with patches & fixes to meet todays needs of deps & libs.
+If your interested in participating to keep this tool alive & working for/in the future -- Feel free to join up! We want YOU!
 
 * Now support Pixie attack + a timeout switch
 * Fixes for tshark from https://github.com/darkr4y/wifite-mod
@@ -31,4 +31,13 @@ If your interested in joining up keeping this tool alive & working -- feel free 
     * Add option to download and install pixiewps and modified reaver from github
     * Add mdk3 support
     * Add default pin calculations and options
+    
+    * Add --clients option to filter on station clients.
+      - This feature is an idea from [https://github.com/derv82/wifite/pull/64/commits/18e7ae0299218aed4361cf3fa7558001cb3c1da5]
+
+
+# Thanks to all nerds who made this tool working again!
+
+A shoutout to the owner/maintainer of the original, "derv82" - original source to be found @ [https://www.github.com/derv82]
+but also a big thanks to Wiire, aanarchyy, DataHead, soxrok2212, nxxxu, nuroo and the great binkybear & g0tm1lk @ Kali / NetHunter for bringing all the patches & fixes that made it work again!
 
