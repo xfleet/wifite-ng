@@ -1,6 +1,7 @@
 
-This is a modified wifite2 fork, with patches & fixes to meet todays needs of deps & libs.
-If your interested in participating to keep this tool alive & working for/in the future -- Feel free to join up! We want YOU!
+This is a modified wifite fork, with patches & fixes to meet todays needs of deps & libs.
+If your interested in participating to keep this tool alive & working in the future..
+  -- Feel free to join up, we want you on our team!
 
 * Now support Pixie attack + a timeout switch
 * Fixes for tshark from https://github.com/darkr4y/wifite-mod
@@ -21,6 +22,8 @@ If your interested in participating to keep this tool alive & working for/in the
     You must install Pixiewps by Wiire (https://github.com/wiire/pixiewps)
       and 
     You must install reaver-wps-fork-t6x by t6x (https://github.com/t6x/reaver-wps-fork-t6x)
+      and maybe, just maybe..
+    You want "bully" (https://github.com/kimocoder/bully) - a fork from "wiire"
 
 # TODO
     * Add check for pixiewps, modified reaver, and offer option to install.
@@ -31,6 +34,8 @@ If your interested in participating to keep this tool alive & working for/in the
     * Add option to download and install pixiewps and modified reaver from github
     * Add mdk3 support
     * Add default pin calculations and options
+    * Add "airmon-ng check" & "check kill" for killing the stuff that may cause interferance with the tool.
+    * Extend the "updater" with checks for "reaver", "pixiewps" & "bully" and other dependencies.
     
     * Add --clients option to filter on station clients.
       - This feature is an idea from [https://github.com/derv82/wifite/pull/64/commits/18e7ae0299218aed4361cf3fa7558001cb3c1da5]
