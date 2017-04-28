@@ -85,7 +85,7 @@ from subprocess import call
 # GLOBAL VARIABLES IN ALL CAPS #
 ################################
 
-REVISION = 1
+REVISION = 99
 
 # WPA variables
 WPA_DISABLE = False  # Flag to skip WPA handshake capture
@@ -187,7 +187,6 @@ if not temp.endswith(os.sep):
 # /dev/null, send output from programs so they don't print to screen.
 DN = open(os.devnull, 'w')
 
-
 ###################
 # DATA STRUCTURES #
 ###################
@@ -218,7 +217,6 @@ class Target:
         self.wps = False  # Default to non-WPS-enabled router.
         self.key = ''
 
-
 class Client:
     """
 		Holds data for a Client (device connected to Access Point/Router)
@@ -229,11 +227,9 @@ class Client:
         self.station = station
         self.power = power
 
-
 ##################
 # MAIN FUNCTIONS #
 ##################
-
 
 def main():
     """
@@ -396,7 +392,6 @@ def main():
     print ''
     exit_gracefully(0)
 
-
 def rename(old, new):
     """
 		Renames file 'old' to 'new', works with separate partitions.
@@ -415,7 +410,6 @@ def rename(old, new):
         # if desired, deal with other errors
         else:
             raise
-
 
 def initial_check():
     """
@@ -454,7 +448,6 @@ def initial_check():
         printed = True
         print R + ' [!]' + O + ' the program %s is not required, but is recommended%s' % (R + rec + O, W)
     if printed: print ''
-
 
 def handle_args():
     """
@@ -753,7 +746,6 @@ def handle_args():
         analyze_capfile(capfile)
     print ''
 
-
 def banner():
     """
 		Displays ASCII art of the highest caliber.
@@ -761,7 +753,7 @@ def banner():
     global REVISION
     print ''
     print G + "  .;'                     `;,    "
-    print G + " .;'  ,;'             `;,  `;,   " + W + "WiFite v2 (r" + str(REVISION) + ")"
+    print G + " .;'  ,;'             `;,  `;,   " + W + "WiFite-NG v2 (r" + str(REVISION) + ")"
     print G + ".;'  ,;'  ,;'     `;,  `;,  `;,  "
     print G + "::   ::   :   " + GR + "( )" + G + "   :   ::   ::  " + GR + "automated wireless auditor"
     print G + "':.  ':.  ':. " + GR + "/_\\" + G + " ,:'  ,:'  ,:'  "
@@ -769,10 +761,9 @@ def banner():
     print G + "  ':.       " + GR + "/_____\\" + G + "      ,:'     "
     print G + "           " + GR + "/       \\" + G + "             "
     print G + ""
-    print G + "Credits to aanarchyy, wiire,DataHead,soxrok2212,nxxxu,nuroo & binkybear @ NetHunter"
-    print G + "-- for bringing back a good, old working wifite tool to life."
+    print G + "Thanks to aanarchyy, wiire, DataHead, soxrok2212, nxxxu, nuroo & binkybear @ NetHunter"
+    print G + "-- and last but not forgotten, to brianclemens. All for making this tool alive again."
     print W
-
 
 def upgrade():
     """
@@ -836,7 +827,6 @@ def upgrade():
         print R + '\n (^C)' + O + ' wifite upgrade interrupted' + W
 
     exit_gracefully(0)
-
 
 def help_wifite():
     """
@@ -910,11 +900,9 @@ def help_wifite():
     print sw + '\t./wifite.py ' + W + '-wps -wep -c 6 -pps 600' + W
     print ''
 
-
 ###########################
 # WIRELESS CARD FUNCTIONS #
 ###########################
-
 
 def enable_monitor_mode(iface):
     """
@@ -932,7 +920,6 @@ def enable_monitor_mode(iface):
     mac_anonymize(IFACE_TO_TAKE_DOWN)
     return IFACE_TO_TAKE_DOWN
 
-
 def disable_monitor_mode():
     """
 		The program may have enabled monitor mode on a wireless interface.
@@ -944,9 +931,7 @@ def disable_monitor_mode():
     call(['airmon-ng', 'stop', IFACE_TO_TAKE_DOWN], stdout=DN, stderr=DN)
     print 'done'
 
-
 PRINTED_SCANNING = False
-
 
 def get_iface():
     """
@@ -1029,15 +1014,11 @@ def get_iface():
     if monitor.startswith('phy'): monitor = monitort
     # mac_anonymize(monitor)
 
-
-
     return enable_monitor_mode(monitor)
-
 
 ######################
 # SCANNING FUNCTIONS #
 ######################
-
 
 def scan(channel=0, iface='', tried_rtl8187_fix=False):
     """
@@ -1349,7 +1330,6 @@ def scan(channel=0, iface='', tried_rtl8187_fix=False):
 
     return victims, clients
 
-
 def parse_csv(filename):
     """
 		Parses given lines from airodump-ng CSV file.
@@ -1403,7 +1383,6 @@ def parse_csv(filename):
                 c = Client(bssid, station, power)
                 clients.append(c)
     return targets, clients
-
 
 def wps_check_targets(targets, cap_file, verbose=True):
     """
@@ -1468,7 +1447,6 @@ def wps_check_targets(targets, cap_file, verbose=True):
                 i += 1
         if removed > 0 and verbose: print GR + ' [+]' + O + ' removed %d non-WPS-enabled targets%s' % (removed, W)
 
-
 def rtl8187_fix(iface):
     """
 		Attempts to solve "Unknown error 132" common with RTL8187 devices.
@@ -1519,7 +1497,6 @@ def rtl8187_fix(iface):
 
     return True
 
-
 def print_and_exec(cmd):
     """
 		Prints and executes command "cmd". Also waits half a second
@@ -1531,7 +1508,6 @@ def print_and_exec(cmd):
     stdout.flush()
     call(cmd, stdout=DN, stderr=DN)
     time.sleep(0.1)
-
 
 ####################
 # HELPER FUNCTIONS #
@@ -1559,7 +1535,6 @@ def remove_airodump_files(prefix):
 		i += 1
 	"""
 
-
 def remove_file(filename):
     """
 		Attempts to remove a file. Does not throw error if file is not found.
@@ -1568,7 +1543,6 @@ def remove_file(filename):
         os.remove(filename)
     except OSError:
         pass
-
 
 def program_exists(program):
     """
@@ -1584,7 +1558,6 @@ def program_exists(program):
 
     return not (txt[1].strip() == '' or txt[1].find('no %s in' % program) != -1)
 
-
 def sec_to_hms(sec):
     """
 		Converts integer sec to h:mm:ss format
@@ -1595,7 +1568,6 @@ def sec_to_hms(sec):
     m = sec / 60
     sec %= 60
     return '[%d:%02d:%02d]' % (h, m, sec)
-
 
 def send_interrupt(process):
     """
@@ -1613,7 +1585,6 @@ def send_interrupt(process):
     except AttributeError:
         pass  # Trying to kill "None"
 
-
 def get_mac_address(iface):
     """
 		Returns MAC address of "iface".
@@ -1624,7 +1595,6 @@ def get_mac_address(iface):
     info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', iface[:15]))
     
     return ''.join(['%02x:' % ord(char) for char in info[18:24]])[:-1]
-
 
 def generate_random_mac(old_mac):
     """
@@ -1642,7 +1612,6 @@ def generate_random_mac(old_mac):
     if new_mac == old_mac:
         new_mac = generate_random_mac(old_mac)
     return new_mac
-
 
 def mac_anonymize(iface):
     """
@@ -1673,7 +1642,6 @@ def mac_anonymize(iface):
             call(['ifconfig', iface, 'up'], stdout=DN, stderr=DN)
             print 'done'
 
-
 def mac_change_back():
     """
 		Changes MAC address back to what it was before attacks began.
@@ -1690,7 +1658,6 @@ def mac_change_back():
     proc.wait()
     call(['ifconfig', iface, 'up'], stdout=DN, stderr=DN)
     print "done"
-
 
 def analyze_capfile(capfile):
     """
@@ -1752,7 +1719,6 @@ def analyze_capfile(capfile):
     print ''
 
     exit_gracefully(0)
-
 
 def get_essid_from_cap(bssid, capfile):
     """
@@ -1818,7 +1784,6 @@ def get_bssid_from_cap(essid, capfile):
             return line.split(' ')[4]
     return ''
 
-
 def exit_gracefully(code=0):
     """
 		We may exit the program at any time.
@@ -1838,7 +1803,6 @@ def exit_gracefully(code=0):
     print ''
     # GTFO
     exit(code)
-
 
 def attack_interrupted_prompt():
     """
@@ -1874,11 +1838,9 @@ def attack_interrupted_prompt():
             should_we_exit = True
     return should_we_exit
 
-
 #################
 # WPA FUNCTIONS #
 #################
-
 
 def wpa_get_handshake(iface, target, clients):
     """
@@ -2059,7 +2021,6 @@ def wpa_get_handshake(iface, target, clients):
 
         return got_handshake
 
-
 def has_handshake_tshark(target, capfile):
     """
 		Uses TShark to check for a handshake.
@@ -2143,7 +2104,6 @@ def has_handshake_tshark(target, capfile):
                     return True
     return False
 
-
 def has_handshake_cowpatty(target, capfile, nonstrict=True):
     """
 		Uses cowpatty to check for a handshake.
@@ -2168,7 +2128,6 @@ def has_handshake_cowpatty(target, capfile, nonstrict=True):
     elif response.find('Unable to open capture file: Success') != -1:
         return False
     return True
-
 
 def has_handshake_pyrit(target, capfile):
     """
@@ -2200,7 +2159,6 @@ def has_handshake_pyrit(target, capfile):
                 return True
     return False
 
-
 def has_handshake_aircrack(target, capfile):
     """
 		Uses aircrack-ng to check for handshake.
@@ -2213,7 +2171,6 @@ def has_handshake_aircrack(target, capfile):
     txt = proc_crack.communicate()[0]
 
     return txt.find('Passphrase not in dictionary') != -1
-
 
 def has_handshake(target, capfile):
     """
@@ -2249,7 +2206,6 @@ def has_handshake(target, capfile):
     print R + ' [!]' + O + ' unable to check for handshake: all handshake options are disabled!'
     exit_gracefully(1)
 
-
 def strip_handshake(capfile):
     """
 		Uses Tshark or Pyrit to strip all non-handshake packets from a .cap file
@@ -2275,7 +2231,6 @@ def strip_handshake(capfile):
     else:
         print R + " [!]" + O + " unable to strip .cap file: neither pyrit nor tshark were found" + W
 
-
 def save_cracked(bssid, ssid, key, encryption):
     """
 		Saves cracked access point key and info to a file.
@@ -2285,7 +2240,6 @@ def save_cracked(bssid, ssid, key, encryption):
     fout.write(bssid + sep + ssid + sep + key + sep + encryption + '\n')
     fout.flush()
     fout.close()
-
 
 def load_cracked():
     """
@@ -2304,7 +2258,6 @@ def load_cracked():
         tar.key = fields[2]
         result.append(tar)
     return result
-
 
 ##########################
 # WPA CRACKING FUNCTIONS #
@@ -2409,7 +2362,6 @@ def wpa_crack(capfile):
 
     return cracked
 
-
 def add_commas(n):
     """
 		Receives integer n, returns string representation of n with commas in thousands place.
@@ -2424,7 +2376,6 @@ def add_commas(n):
         result += strn[i]
         i += 1
     return result
-
 
 #################
 # WEP FUNCTIONS #
@@ -2808,7 +2759,6 @@ def attack_wep(iface, target, clients):
     remove_airodump_files(temp + 'wep')
     remove_file(temp + 'wepkey.txt')
 
-
 def wep_fake_auth(iface, target, time_to_display):
     """
 		Attempt to (falsely) authenticate with a WEP access point.
@@ -2857,7 +2807,6 @@ def wep_fake_auth(iface, target, time_to_display):
         continue
     print ''
     return False
-
 
 def get_aireplay_command(iface, attack_num, target, clients, client_mac):
     """
@@ -2932,7 +2881,6 @@ def get_aireplay_command(iface, attack_num, target, clients, client_mac):
 
     return cmd
 
-
 def wep_send_deauths(iface, target, clients):
     """
 		Sends deauth packets to broadcast and every client.
@@ -2952,11 +2900,9 @@ def wep_send_deauths(iface, target, clients):
                iface]
         call(cmd, stdout=DN, stderr=DN)
 
-
 #################
 # WPS FUNCTIONS #
 #################
-
 
 def wps_attack(iface, target):
     """
@@ -2967,9 +2913,7 @@ def wps_attack(iface, target):
 	"""
 
     #####PIXIEWPS#####
-
     # OUI's from https://www.wireshark.org/tools/oui-lookup.html
-
     # Belkin and dlink detection for: "Default Pin Generator by devttys0 team [1] Belkin [2] D-Link"
 
     belkin = ["00:11:50", "00:17:3F", "00:1C:DF", "00:22:75", "00:30:BD", "08:86:3B", "14:91:82", "94:10:3E",
@@ -3017,7 +2961,6 @@ def wps_attack(iface, target):
     # Run reaver to collect hashes
 
     # Report when each hash is found
-
     reaver_check = Popen("reaver", stdout=PIPE, stderr=DN)
 
     for line in reaver_check.communicate()[0].split('\n'):
@@ -3343,7 +3286,6 @@ def wps_attack(iface, target):
         send_interrupt(proc)
 
         return cracked
-
 
 if __name__ == '__main__':
     try:
