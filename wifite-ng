@@ -1799,6 +1799,9 @@ def exit_gracefully(code=0):
     disable_monitor_mode()
     # Change MAC address back if spoofed
     # mac_change_back() #no longer needed
+    # Start network-manager (if needed)
+    print_and_exec('service network-manager start'.split())
+    print('')
     print GR + " [+]" + W + " quitting"  # wifite will now exit"
     print ''
     # GTFO
