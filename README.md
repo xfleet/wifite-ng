@@ -11,6 +11,12 @@ If your interested in participating to keep this tool alive & working in the fut
 * Macchanger fix
 * Oui lookup for pingen attack
 
+# Some News
+
+    - Added restoration of Network-Manager state on_exit, but "airmon check kill" is NOT implemented yet but it should be!
+    - A bigger issue may be that WPA handshake capture cracking "crashes" leaving the file with 0 kb of info, BUT
+      wifite stores WPA capture files in "/tmp/wifiteXXXXXX" on tha capture start, and DLETES/MOVES the files on WPA attack exit.
+      The files are actually correct, containing handshakes in the "tmp" folder BEFORE moving the files..should be a simple fix!?
 
 # NEW Added flags
     -pto <sec>        # configurable timeout for pixiewps attack, default 660
