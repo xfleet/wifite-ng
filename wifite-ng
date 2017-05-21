@@ -1955,7 +1955,7 @@ def wpa_get_handshake(iface, target, clients):
 
                 # Save copy of cap file (for debugging)
                 # remove_file('/root/new/wpa-01.cap')
-                # copy(temp + 'wpa-01.cap', '/root/new/wpa-01.cap')
+                copy(temp + 'wpa-01.cap', 'wpa-01.cap')
 
                 # Check for handshake
                 if has_handshake(target, temp + 'wpa-01.cap.temp'):
