@@ -85,7 +85,7 @@ from subprocess import call
 # GLOBAL VARIABLES IN ALL CAPS #
 ################################
 
-REVISION = 99
+REVISION = 100
 
 # WPA variables
 WPA_DISABLE = False  # Flag to skip WPA handshake capture
