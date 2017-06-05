@@ -1,4 +1,10 @@
 
+** derv82 has updated wifite & wifite2 so PLEASE go back to the originaloriginal
+   @ http://github.com.com/derv82/wifite since this is now OUTDATED!
+   
+
+
+
 This is a modified wifite fork, dubbed "wifite-ng" for 'Next Generation' status, 
 with patches & fixes to meet todays needs of deps & libs.
 
