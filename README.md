@@ -1,12 +1,28 @@
 
-This is a modified wifite fork, with patches & fixes to meet todays needs of deps & libs.
+** derv82 has updated wifite & wifite2 so PLEASE go back to the originaloriginal
+   @ http://github.com.com/derv82/wifite since this is now OUTDATED!
+   
+
+
+
+This is a modified wifite fork, dubbed "wifite-ng" for 'Next Generation' status, 
+with patches & fixes to meet todays needs of deps & libs.
+
 If your interested in participating to keep this tool alive & working in the future..
-  -- Feel free to join up, we want you on our team!
+  -- Feel free to join up, we could use more help!
 
 * Now support Pixie attack + a timeout switch
+* Fixes for reaver
 * Fixes for tshark from https://github.com/darkr4y/wifite-mod
 * Macchanger fix
 * Oui lookup for pingen attack
+
+# Some News
+
+    - Added restoration of Network-Manager state on_exit, but "airmon check kill" is NOT implemented yet but it should be!
+    - A bigger issue may be that WPA handshake capture cracking "crashes" leaving the file with 0 kb of info, BUT
+      wifite stores WPA capture files in "/tmp/wifiteXXXXXX" on tha capture start, and DLETES/MOVES the files on WPA attack exit.
+      The files are actually correct, containing handshakes in the "tmp" folder BEFORE moving the files..should be a simple fix!?
 
 # NEW Added flags
     -pto <sec>        # configurable timeout for pixiewps attack, default 660
@@ -20,10 +36,13 @@ If your interested in participating to keep this tool alive & working in the fut
 # Required Tools / Dependencies
 
     You must install Pixiewps by Wiire (https://github.com/wiire/pixiewps)
-      and 
+      and with pixiewps you will need 'Reaver' ..
+      
     You must install reaver-wps-fork-t6x by t6x (https://github.com/t6x/reaver-wps-fork-t6x)
-      and maybe, just maybe..
+      and maybe, just maybe ..
+      
     You want "bully" (https://github.com/kimocoder/bully) - a fork from "wiire"
+
 
 # TODO
     * Add check for pixiewps, modified reaver, and offer option to install.
@@ -40,9 +59,16 @@ If your interested in participating to keep this tool alive & working in the fut
     * Add --clients option to filter on station clients.
       - This feature is an idea from [https://github.com/derv82/wifite/pull/64/commits/18e7ae0299218aed4361cf3fa7558001cb3c1da5]
 
+    * NEW:
+      A FOUR-STAGE script, where #1 is reaver prescan, #2 is reaver pin harvesting, stage #3 is mdk3 DDoS
+      and stage #4 is a pause router recovery period with wash scan looking for the router recovery and channel after MDK3
+      usage. Add a OPTION to the pause recovery period.
+    
+      -- This will actually 'UNLOCK' a 'LOCKED' / "rate limit" WPS station again. But it will be some work to impl. mdk3
+
 
 # Thanks to all nerds who made this tool working again!
 
-A shoutout to the owner/maintainer of the original, "derv82" - original source to be found @ [https://www.github.com/derv82]
-but also a big thanks to Wiire, aanarchyy, DataHead, soxrok2212, nxxxu, nuroo and the great binkybear & g0tm1lk @ Kali / NetHunter for bringing all the patches & fixes that made it work again!
+A shoutout to the owner/maintainer of the original tool, "derv82" - original source to be found @ [https://www.github.com/derv82]
+but also a big thanks to brianclemens, Wiire, aanarchyy, DataHead, soxrok2212, nxxxu, nuroo and the great binkybear & g0tm1lk for bringing the patches & fixes that made it work again!
 
